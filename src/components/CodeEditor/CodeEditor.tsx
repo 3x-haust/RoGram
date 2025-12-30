@@ -169,6 +169,17 @@ const executeCode = async (
   code: string,
   updateOutput?: (text: string) => void
 ): Promise<string> => {
+  console.log('Executing code:\n', code);
+  console.log(updateOutput);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const simulatedOutput = `실행된 코드:\n${code}\n\n[시뮬레이션된 출력] 코드가 성공적으로 실행되었습니다.`;
+      if (updateOutput) {
+        updateOutput(simulatedOutput);
+      }
+      resolve(simulatedOutput);
+    }, 1000);
+  });
   // const fs = await import('fs');
   // const { exec } = await import('child_process');
   // const timestamp = Date.now();
