@@ -66,11 +66,6 @@ const verifyCodeSolution = (userCode: string, solutionCode: string): boolean => 
   return normalizedUserCode === normalizedSolutionCode;
 };
 
-const extractSolutionCode = (taskContent: string): string => {
-  const solutionMatch = taskContent?.match(/```solution\n([\s\S]*?)```/);
-  return solutionMatch ? solutionMatch[1].trim() : '';
-};
-
 const SuccessPopup = styled.div`
   position: fixed;
   top: 50%;
@@ -174,44 +169,37 @@ const executeCode = async (
   code: string,
   updateOutput?: (text: string) => void
 ): Promise<string> => {
-  const fs = await import('fs');
-  const { exec } = await import('child_process');
-
-  const timestamp = Date.now();
-  const filename = `temp_${timestamp}.py`;
-
-  return new Promise((resolve, reject) => {
-    fs.writeFile(filename, code, (writeErr) => {
-      if (writeErr) {
-        reject(`Error writing file: ${writeErr.message}`);
-        return;
-      }
-
-      const process = exec(`python3 ${filename}`);
-
-      process.stdout?.on('data', (data) => {
-        if (updateOutput) updateOutput(data);
-      });
-
-      process.stderr?.on('data', (data) => {
-        if (updateOutput) updateOutput(data);
-      });
-
-      process.on('close', (code) => {
-        fs.unlink(filename, (unlinkErr) => {
-          if (unlinkErr) {
-            console.error(`Error deleting file: ${unlinkErr.message}`);
-          }
-        });
-
-        if (code === 0) {
-          resolve('Execution completed successfully.');
-        } else {
-          reject(`Execution failed with code ${code}.`);
-        }
-      });
-    });
-  });
+  // const fs = await import('fs');
+  // const { exec } = await import('child_process');
+  // const timestamp = Date.now();
+  // const filename = `temp_${timestamp}.py`;
+  // return new Promise((resolve, reject) => {
+  //   fs.writeFile(filename, code, (writeErr) => {
+  //     if (writeErr) {
+  //       reject(`Error writing file: ${writeErr.message}`);
+  //       return;
+  //     }
+  //     const process = exec(`python3 ${filename}`);
+  //     process.stdout?.on('data', (data) => {
+  //       if (updateOutput) updateOutput(data);
+  //     });
+  //     process.stderr?.on('data', (data) => {
+  //       if (updateOutput) updateOutput(data);
+  //     });
+  //     process.on('close', (code) => {
+  //       fs.unlink(filename, (unlinkErr) => {
+  //         if (unlinkErr) {
+  //           console.error(`Error deleting file: ${unlinkErr.message}`);
+  //         }
+  //       });
+  //       if (code === 0) {
+  //         resolve('Execution completed successfully.');
+  //       } else {
+  //         reject(`Execution failed with code ${code}.`);
+  //       }
+  //     });
+  //   });
+  // });
 };
 
 const EditorContainer = styled.div`
